@@ -3,6 +3,9 @@ var Game = {
   h: 600
 };
 
+var TILE_SIZE = 32;
+
+
 // var w = 800;
 // var h = 600;
 
@@ -49,6 +52,10 @@ Game.Load.prototype = {
 
     //Load button for twitter
     this.game.load.image('twitter','assets/images/twitter.png');
+
+    //Temporary Sprites
+    this.game.load.spritesheet('player','assets/images/hero_x32.png',32,32,12);
+    this.game.load.spritesheet('dungeon', 'assets/images/dungeon.png',32,32,16);
 
     // Music Track
     // this.game.load.audio('music','soundtrack.mp3');
