@@ -2,8 +2,8 @@ var FILLED = '0';
 var EMPTY = '3';
 
 function Automata(width, height) {
-  this.width = width;
-  this.height = height;
+  this.width = Math.floor(width);
+  this.height = Math.floor(height);
   this.lifeCycles = 0;
   this.cells = [];
   this.minimumLifeCycles = 100;
@@ -11,7 +11,7 @@ function Automata(width, height) {
 
   // Initialize Map
   this.resetMap();
-};
+}
 Automata.prototype.resetMap = function() {
   this.map = [];
   for (var y = 0; y < this.height; y++) {

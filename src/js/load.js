@@ -1,9 +1,18 @@
+// var Game = {
+//   w: 800,
+//   h: 600
+// };
+
+var ROWS = 10;
+var COLS = 15; 
+var TILE_SIZE = 64;
+
 var Game = {
-  w: 800,
-  h: 600
+  w: COLS*TILE_SIZE,
+  h: ROWS*TILE_SIZE 
 };
 
-var TILE_SIZE = 32;
+
 
 
 // var w = 800;
@@ -21,7 +30,6 @@ Game.Boot.prototype = {
 		this.game.load.image('title', 'assets/images/title.png');
 		this.game.load.image('instructions', 'assets/images/instructions.png');
     this.game.load.bitmapFont('minecraftia', 'assets/fonts/font.png', 'assets/fonts/font.xml'); //load default font
-
 
     // //Scale Image to Fit Window
     // this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -54,8 +62,12 @@ Game.Load.prototype = {
     this.game.load.image('twitter','assets/images/twitter.png');
 
     //Temporary Sprites
-    this.game.load.spritesheet('player','assets/images/hero_x32.png',32,32,12);
-    this.game.load.spritesheet('dungeon', 'assets/images/dungeon.png',32,32,16);
+    // this.game.load.spritesheet('player','assets/images/hero_x32.png',32,32,12);
+    // this.game.load.spritesheet('dungeon', 'assets/images/dungeon.png',32,32,16);
+
+    this.game.load.spritesheet('dungeon', 'assets/images/well.png',64,64,16);
+    this.game.load.spritesheet('enemy','assets/images/npc_jack.png',64,64,15);
+    this.game.load.spritesheet('player','assets/images/hero_x64.png',64,64,12);
 
     // Music Track
     // this.game.load.audio('music','soundtrack.mp3');
