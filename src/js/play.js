@@ -22,10 +22,9 @@ var score = 0;
 var FILLED = '0';
 var EMPTY = '3';
 var map;
-var player,actorList,actorMap,acted;
+var player,actorList,actorMap,livingEnemies,acted;
 
 function onKeyUp(event) {
-        // act on player input
 		acted = false;
     switch (event.keyCode) {
 			case Phaser.Keyboard.LEFT:
@@ -44,6 +43,16 @@ function onKeyUp(event) {
 							acted = moveActor(player, {x:0, y:1});
 							break;
     }
+		if (acted)
+		for (var enemy in actorList) {
+						// skip the player
+						if(enemy==0)
+										continue;
+
+						var e = actorList[enemy];
+						if (e != null)
+										aiAct(e);
+		}
     
   }
 
@@ -64,6 +73,13 @@ function moveActor(actor, dir) {
       if (enemy.health <= 0) {
         actorMap[newKey] = null;
         actorList[actorList.indexOf(enemy)] = null;
+				if (enemy !== player) {
+					livingEnemies--;
+					if (livingEnemies === 0) {
+						var victory = game.add.text(game.world.centerX, game.world.centerY, 'Victory!\nCtrl+r to restart', { fill : '#2e2', align: "center" } );
+            victory.anchor.setTo(0.5,0.5);
+					}
+				}
 				enemy.kill();
         //add dealing with kill stuff
       }
@@ -94,7 +110,43 @@ function moveActor(actor, dir) {
 					 actor.ty+dir.y <= ROWS - 1 && 
 					 map[actor.ty+dir.y][actor.tx +dir.x] == EMPTY
   }
-
+function randomInt(max) {
+   return Math.floor(Math.random() * max);
+}
+function aiAct(actor) {
+        var directions = [ { x: -1, y:0 }, { x:1, y:0 }, { x:0, y: -1 }, { x:0, y:1 } ];
+        var dx = player.tx - actor.tx;
+        var dy = player.ty - actor.ty;
+ 
+        // if player is far away, walk randomly
+        if (Math.abs(dx) + Math.abs(dy) > 6)
+                // try to walk in random directions until you succeed once
+                while (!moveActor(actor, directions[randomInt(directions.length)])) { };
+ 
+        // otherwise walk towards player
+        if (Math.abs(dx) > Math.abs(dy)) {
+                if (dx < 0) {
+                        // left
+                        moveActor(actor, directions[0]);
+                } else {
+                        // right
+                        moveActor(actor, directions[1]);
+                }
+        } else {
+                if (dy < 0) {
+                        // up
+                        moveActor(actor, directions[2]);
+                } else {
+                        // down
+                        moveActor(actor, directions[3]);
+                }
+        }
+        if (player.health < 1) {
+                // game over message
+                var gameOver = game.add.text(game.world.centerX, game.world.centerY, 'Game Over\nCtrl+r to restart', { fill : '#e22', align: "center" } );
+                gameOver.anchor.setTo(0.5,0.5);
+        }
+}
 
 Game.Play = function(game) {
   this.game = game;
@@ -131,7 +183,7 @@ Game.Play.prototype = {
 
     actorList = [];
     actorMap = {};
-    this.livingEnemies;
+		enemy_count = 10;
 
     for(var i=0;i < 10;i++) {
       var actor;
@@ -152,6 +204,7 @@ Game.Play.prototype = {
       //Add references
       actorMap[actor.ty + "_" + actor.tx] = actor;
       actorList.push(actor);
+			livingEnemies = enemy_count - 1;
     }
     // console.log(actorMap);
 
@@ -207,10 +260,6 @@ Game.Play.prototype = {
   update: function() {
     this.game.physics.arcade.collide(player, this.layer);
 
-
-		// this.game
-
-
     // // Toggle Music
     // muteKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
     // muteKey.onDown.add(this.toggleMute, this);
@@ -237,7 +286,7 @@ Game.Play.prototype = {
   render: function() {
     this.game.debug.bodyInfo(player,64, 64);
     this.game.debug.body(player);
-    // game.debug.text('Health: ' + tri.health, 32, 96);
+    game.debug.text('Health' + player.health, 32, 32);
   }
 
 };

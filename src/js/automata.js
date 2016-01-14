@@ -6,7 +6,7 @@ function Automata(width, height) {
   this.height = Math.floor(height);
   this.lifeCycles = 0;
   this.cells = [];
-  this.minimumLifeCycles = 100;
+  this.minimumLifeCycles = 10;
   this.spawnChance = 6; //Percentage Chance to Spawn a child cell
 
   // Initialize Map
