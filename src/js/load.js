@@ -78,7 +78,7 @@ Game.Load.prototype = {
     this.game.load.audio('dead', 'assets/audio/dead.mp3');
 
     // Music Track
-    this.game.load.audio('music','assets/audio/s31-Night_Prowler.ogg');
+    this.game.load.audio('music','assets/audio/s31-Night_Prowler.mp3');
 
   },
   create: function() {
