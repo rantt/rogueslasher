@@ -1,13 +1,13 @@
-var FILLED = '0';
-var EMPTY = '3';
+// var WALL = '0';
+// var FLOOR = '3';
 
 function Automata(width, height) {
   this.width = Math.floor(width);
   this.height = Math.floor(height);
   this.lifeCycles = 0;
   this.cells = [];
-  this.minimumLifeCycles = 10;
-  this.spawnChance = 6; //Percentage Chance to Spawn a child cell
+  this.minimumLifeCycles = 40;
+  this.spawnChance = 7; //Percentage Chance to Spawn a child cell
 
   // Initialize Map
   this.resetMap();
@@ -24,7 +24,7 @@ Automata.prototype.resetMap = function() {
 
     // Initialize Map
     for (var x = 0; x < this.width; x++) {
-      this.map[y][x] = FILLED;
+      this.map[y][x] = WALL;
     }
   }
 };
@@ -36,7 +36,7 @@ Automata.prototype.print = function () {
   for (var y = 0; y < this.height; y++) {
     for (var x = 0; x < this.width; x++) {
       var cell = '';
-      if (this.map[y][x] === FILLED) {
+      if (this.map[y][x] === WALL) {
         cell = '#';
       } else {
         cell = '.';
@@ -67,7 +67,7 @@ Automata.prototype.addCell = function (xpos, ypos) {
   var x = xpos || Math.floor(this.width / 2);
   var y = ypos || Math.floor(this.height / 2);
   var cell = new Cell(x, y, this.map[y][x]);
-  this.map[cell.y][cell.x] = EMPTY;
+  this.map[cell.y][cell.x] = FLOOR;
 
   this.cells.push(cell);
 };
@@ -143,7 +143,7 @@ Automata.prototype.cleanup = function() {
       cell.allowDiagonals = true;
       // console.log('neighbours'+cell.neighbours(this.map));
       if (cell.neighbours(this.map).length < 1) {
-        this.map[y][x] = EMPTY;
+        this.map[y][x] = FLOOR;
       }
     }
   }
@@ -218,7 +218,7 @@ Cell.prototype = {
     if (this.alive) {
       this.x = move_to.x;
       this.y = move_to.y;
-      map[move_to.y][move_to.x] = EMPTY;
+      map[move_to.y][move_to.x] = FLOOR;
     }
     return map;
   }
@@ -228,7 +228,7 @@ Cell.prototype.checkNeighbour = function (pos, map) {
   var width = map[0].length;
   var height = map.length;
   try {
-    if (pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height || map[pos.y][pos.x] === EMPTY) {
+    if (pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height || map[pos.y][pos.x] === FLOOR) {
       return false;
     } else {
       return true;
@@ -273,9 +273,3 @@ Cell.prototype.neighbours = function (map) {
   return neighbours;
 };
 
-// let auto = new Automata(70, 50);
-// var auto = new Automata(40, 30); //20x20 tiles 800x600
-// // let auto = new Automata(160, 120); //20x20 tiles 800x600 screen 4 screens
-// auto.addCell();
-// auto.generate();
-// console.log(auto.csv());

@@ -3,15 +3,20 @@
 //   h: 600
 // };
 
-var ROWS = 10;
-var COLS = 15; 
-var TILE_SIZE = 64;
+// var ROWS = 10;
+// var COLS = 15; 
+var ROWS = 12;
+var COLS = 20; 
+var TILE_SIZE = 42;
 
 var Game = {
   w: COLS*TILE_SIZE,
   h: ROWS*TILE_SIZE 
 };
 
+if (localStorage.getItem('atRogueSlasherHighestScore') === null) {
+  localStorage.setItem('atRogueSlasherHighestScore', 0);
+}
 
 
 
@@ -25,16 +30,16 @@ Game.Boot = function(game) {
 Game.Boot.prototype = {
   preload: function() {
     // console.log('blah'+Game.w);
-		this.game.stage.backgroundColor = '#FFF';
+		this.game.stage.backgroundColor = '#454545';
 		this.game.load.image('loading', 'assets/images/loading.png');
 		this.game.load.image('title', 'assets/images/title.png');
 		this.game.load.image('instructions', 'assets/images/instructions.png');
     this.game.load.bitmapFont('minecraftia', 'assets/fonts/font.png', 'assets/fonts/font.xml'); //load default font
 
-    // //Scale Image to Fit Window
-    // this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    // this.game.scale.maxHeight = window.innerHeight;
-    // this.game.scale.maxWidth = window.innerHeight*(Game.w/Game.h);
+    //Scale Image to Fit Window
+    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    this.game.scale.maxHeight = window.innerHeight;
+    this.game.scale.maxWidth = window.innerHeight*(Game.w/Game.h);
 
   },
   create: function() {
@@ -62,15 +67,18 @@ Game.Load.prototype = {
     this.game.load.image('twitter','assets/images/twitter.png');
 
     //Temporary Sprites
-    // this.game.load.spritesheet('player','assets/images/hero_x32.png',32,32,12);
+    this.game.load.spritesheet('player','assets/images/player.png',42,42,4);
     // this.game.load.spritesheet('dungeon', 'assets/images/dungeon.png',32,32,16);
 
-    this.game.load.spritesheet('dungeon', 'assets/images/well.png',64,64,16);
+    this.game.load.spritesheet('dungeon', 'assets/images/tiles.png',42,42,7);
     this.game.load.spritesheet('enemy','assets/images/npc_jack.png',64,64,15);
-    this.game.load.spritesheet('player','assets/images/hero_x64.png',64,64,12);
+    this.game.load.atlasXML('hearts','assets/images/hearts.png','assets/atlas/hearts.xml');
+
+    this.game.load.audio('attack', 'assets/audio/attack.mp3');
+    this.game.load.audio('dead', 'assets/audio/dead.mp3');
 
     // Music Track
-    // this.game.load.audio('music','soundtrack.mp3');
+    this.game.load.audio('music','assets/audio/s31-Night_Prowler.ogg');
 
   },
   create: function() {

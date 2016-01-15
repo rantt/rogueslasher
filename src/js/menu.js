@@ -15,7 +15,15 @@ Game.Menu.prototype =  {
 
         // Start Message
 
-        var clickText = this.game.add.bitmapText(Game.w/2, Game.h/2-50, 'minecraftia', '~click to start~', 24); 
+        var clickText = this.game.add.bitmapText(Game.w/2, Game.h/2+80, 'minecraftia', '~click to start~', 24); 
+        clickText.anchor.setTo(0.5);
+
+        this.highestScore = parseInt(JSON.parse(localStorage.getItem('atRogueSlasherHighestScore')));
+        if (this.highestScore > 0) {
+          var scoreText = this.game.add.bitmapText(Game.w/2, Game.h/2+140, 'minecraftia', 'High Score: '+this.highestScore, 24); 
+          scoreText.tint = 0xffff00;
+          scoreText.anchor.setTo(0.5);
+        }
 
     },
     update: function() {

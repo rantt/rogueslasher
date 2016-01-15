@@ -11,6 +11,9 @@ var Actor = function(game, tilex, tiley, tile_size, sprite_sheet, frame) {
   // this.game.camera.follow(this, Phaser.Camera.FOLLOW_PLATFORMER);
 
   this.game.add.existing(this);
+  this.direction = 'right';
+  this.animations.add('atk_right',[0,1,0],10);
+  this.animations.add('atk_left',[2,3,2],10);
 
 };
 

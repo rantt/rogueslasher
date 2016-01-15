@@ -1,0 +1,7 @@
+<TextureAtlas imagePath="hearts.png">
+	<SubTexture name="hearts - 1.png" x="0" y="66" width="32" height="31"/>
+	<SubTexture name="hearts - 2.png" x="34" y="0" width="32" height="31"/>
+	<SubTexture name="hearts - 3.png" x="34" y="33" width="32" height="31"/>
+	<SubTexture name="hearts - 4.png" x="0" y="33" width="32" height="31"/>
+	<SubTexture name="hearts - 5.png" x="0" y="0" width="32" height="31"/>
+</TextureAtlas>
