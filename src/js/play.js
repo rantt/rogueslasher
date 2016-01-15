@@ -23,6 +23,7 @@ var winMsg;
 var loseMsg;
 var level = 0;
 var enemy_count = 3;
+
 var FLOOR,WALL;
 var heartGauge;
 var twitterButton;
