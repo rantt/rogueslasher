@@ -28,30 +28,6 @@ var FLOOR,WALL;
 var heartGauge;
 var twitterButton;
 
-// //Grass Lands
-// var FLOOR = '6';
-// var WALL = '2';
-
-// //Grass and Water 
-// var FLOOR = '6';
-// var WALL = '5';
-
-// //Caves
-// var FLOOR = '2';
-// var WALL = '1';
-
-// //Fire Pits
-// var FLOOR = '3';
-// var WALL = '1';
-
-// //Island
-// var FLOOR = '5';
-// var WALL = '2';
-
-// //Frozen Wastes
-// var FLOOR = '4';
-// var WALL = '0';
-
 var map;
 var player,actorList,actorMap,livingEnemies,acted;
 
