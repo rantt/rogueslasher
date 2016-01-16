@@ -363,6 +363,7 @@ Game.Play.prototype = {
   twitter: function() {
     //Popup twitter window to post highscore
     var game_url = 'http://www.divideby5.com/games/rogueslasher/'; 
+    // var game_url = 'http://rantt.itch.io/rogue-slasher'; 
     var twitter_name = 'rantt_';
     var tags = ['onegameaweek'];
 

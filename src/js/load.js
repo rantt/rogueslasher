@@ -29,7 +29,6 @@ Game.Boot = function(game) {
 
 Game.Boot.prototype = {
   preload: function() {
-    // console.log('blah'+Game.w);
 		this.game.stage.backgroundColor = '#454545';
 		this.game.load.image('loading', 'assets/images/loading.png');
 		this.game.load.image('title', 'assets/images/title.png');
