@@ -31,48 +31,8 @@ var twitterButton;
 var map;
 var player,actorList,actorMap,livingEnemies,acted;
 
-// var attackSnd;
-
-function onKeyUp(event) {
-  acted = false;
-  switch (event.keyCode) {
-    case Phaser.Keyboard.LEFT:
-            player.frame = 2;
-            player.direction = 'left';
-            acted = moveActor(player, {x:-1, y:0});
-            break;
-
-    case Phaser.Keyboard.RIGHT:
-            player.direction = 'right';
-            player.frame = 0;
-            acted = moveActor(player,{x:1, y:0});
-            break;
-
-    case Phaser.Keyboard.UP:
-            acted = moveActor(player, {x:0, y:-1});
-            break;
-
-    case Phaser.Keyboard.DOWN:
-            acted = moveActor(player, {x:0, y:1});
-            break;
-
-  }
-  if (acted) {
-    for (var enemy in actorList) {
-      // skip the player
-      if(enemy==0)
-        continue;
-
-      var e = actorList[enemy];
-      if (e != null)
-        aiAct(e);
-    }
-  }
-  
-}
-
 function moveActor(actor, dir) {
-  console.log(!canGo(actor, dir));
+  // console.log(!canGo(actor, dir));
   if (!canGo(actor, dir))
     return false;
   
@@ -127,7 +87,7 @@ function moveActor(actor, dir) {
 
     actor.y = actor.ty*TILE_SIZE;
     actor.x = actor.tx*TILE_SIZE;
-    console.log(actor);
+    // console.log(actor);
 
     //Add reference to the actors new position
     actorMap[actor.ty+ '_'+ actor.tx]=actor; 
@@ -200,7 +160,7 @@ Game.Play.prototype = {
 
 
     this.highestScore = parseInt(JSON.parse(localStorage.getItem('atRogueSlasherHighestScore')));
-    this.game.input.keyboard.addCallbacks(null, null, onKeyUp);
+    // this.game.input.keyboard.addCallbacks(null, null, onKeyUp);
 
 
     this.loadLevel();
@@ -216,18 +176,96 @@ Game.Play.prototype = {
 
 
     // //Setup WASD and extra keys
-    // this.cursor = this.game.input.keyboard.createCursorKeys();
-    // wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
-    // aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
-    // sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-    // dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
+    this.cursors = this.game.input.keyboard.createCursorKeys();
+    wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+    aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
+    sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+    dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
+    spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
     // muteKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
 
 
-    //Create Twitter button as invisible, show during win condition to post highscore
+    this.movement = {
+      up: function() {
+        acted = moveActor(player, {x:0, y:-1});
+      },
+      down: function() {
+        acted = moveActor(player, {x:0, y:1});
+      },
+      left: function() {
+        player.frame = 2;
+        player.direction = 'left';
+        acted = moveActor(player, {x:-1, y:0});
+      },
+      right: function() {
+            player.direction = 'right';
+            player.frame = 0;
+            acted = moveActor(player,{x:1, y:0});
+      }
+    }; 
 
-		// left_key = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+    //Up Key
+    this.cursors.up.onUp.add(this.onKeyUp,this);
+    wKey.onUp.add(this.onKeyUp,this);
 
+    //Down Key
+    this.cursors.down.onUp.add(this.onKeyUp,this);
+    sKey.onUp.add(this.onKeyUp,this);
+
+    //Left Key
+    this.cursors.left.onUp.add(this.onKeyUp,this);
+    aKey.onUp.add(this.onKeyUp,this);
+
+    //Right Key
+    this.cursors.right.onUp.add(this.onKeyUp,this);
+    dKey.onUp.add(this.onKeyUp,this);
+
+    //Reset Game w/ space on mouse click
+    spaceKey.onUp.add(this.resetGame, this);
+    this.game.input.onUp.add(this.resetGame, this);
+
+
+  },
+  resetGame: function() {
+    console.log('reset blah');
+    if (livingEnemies === 0) {
+      this.loadLevel();
+      this.loadActors();
+    }else if (!player.alive) {
+      score = 0;
+      this.loadLevel();
+      this.loadActors();
+    }
+  },
+  onKeyUp: function(key) {
+    acted = false;
+    if (key === this.cursors.up || key === wKey ) {
+      this.movement.up();
+      console.log('im up');  
+    }else if (key === this.cursors.down || key === sKey ) {
+      this.movement.down();
+      console.log('im down');  
+    }else if (key === this.cursors.left || key === aKey ) {
+      this.movement.left();
+      console.log('im left');  
+    }else if (key === this.cursors.right || key === dKey ) {
+      this.movement.right();
+      console.log('im right');  
+    }
+
+    // Mobs Move/Attack
+    if (acted) {
+      for (var enemy in actorList) {
+        // skip the player
+        if(enemy==0)
+          continue;
+
+        var e = actorList[enemy];
+        if (e != null)
+          aiAct(e);
+      }
+    }
   },
   loadActors: function() {
     function randomInt(max) {
@@ -338,21 +376,21 @@ Game.Play.prototype = {
     }
 
 
-    if (this.game.input.activePointer.isDown && livingEnemies === 0) {
-      console.log('Score: ' + score + ' living: '+ livingEnemies);
-
-      // winMsg.visible = false;
-      this.loadLevel();
-      this.loadActors();
-    }
-
-    if (this.game.input.activePointer.isDown && !player.alive) {
-      // winMsg.visible = false;
-
-      score = 0;
-      this.loadLevel();
-      this.loadActors();
-    }
+    // if (this.game.input.activePointer.isDown && livingEnemies === 0) {
+    //   // console.log('Score: ' + score + ' living: '+ livingEnemies);
+    //
+    //   // winMsg.visible = false;
+    //   this.loadLevel();
+    //   this.loadActors();
+    // }
+    //
+    // if (this.game.input.activePointer.isDown && !player.alive) {
+    //   // winMsg.visible = false;
+    //
+    //   score = 0;
+    //   this.loadLevel();
+    //   this.loadActors();
+    // }
 
 
     // // Toggle Music
