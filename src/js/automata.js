@@ -131,7 +131,7 @@ Automata.prototype.generate = function() {
     this.resetMap();
     this.generate();  
   }else {
-    console.log('normal lifecycle =>'+ this.lifeCycles);
+    // console.log('normal lifecycle =>'+ this.lifeCycles);
   }
 };
 

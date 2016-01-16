@@ -57,8 +57,9 @@ function moveActor(actor, dir) {
     }
 
     if (enemy.health <= 0) {
+      score++; //score one point for mob kills
       if (actor === player)
-        score += 1;
+        score++; //score two points for player kills
         scoreText.setText('Score: '+score);
       
       actorMap[newKey] = null;
@@ -225,10 +226,8 @@ Game.Play.prototype = {
     spaceKey.onUp.add(this.resetGame, this);
     this.game.input.onUp.add(this.resetGame, this);
 
-
   },
   resetGame: function() {
-    console.log('reset blah');
     if (livingEnemies === 0) {
       this.loadLevel();
       this.loadActors();
@@ -239,19 +238,19 @@ Game.Play.prototype = {
     }
   },
   onKeyUp: function(key) {
+    if (player.alive === false)
+      return
+
     acted = false;
+
     if (key === this.cursors.up || key === wKey ) {
       this.movement.up();
-      console.log('im up');  
     }else if (key === this.cursors.down || key === sKey ) {
       this.movement.down();
-      console.log('im down');  
     }else if (key === this.cursors.left || key === aKey ) {
       this.movement.left();
-      console.log('im left');  
     }else if (key === this.cursors.right || key === dKey ) {
       this.movement.right();
-      console.log('im right');  
     }
 
     // Mobs Move/Attack
@@ -299,7 +298,6 @@ Game.Play.prototype = {
       actorList.push(actor);
 			livingEnemies = enemy_count - 1;
     }
-    // console.log(actorMap);
 
     player = actorList[0];
     this.game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER);
@@ -375,24 +373,7 @@ Game.Play.prototype = {
       localStorage.setItem('atRogueSlasherHighestScore', score);
     }
 
-
-    // if (this.game.input.activePointer.isDown && livingEnemies === 0) {
-    //   // console.log('Score: ' + score + ' living: '+ livingEnemies);
-    //
-    //   // winMsg.visible = false;
-    //   this.loadLevel();
-    //   this.loadActors();
-    // }
-    //
-    // if (this.game.input.activePointer.isDown && !player.alive) {
-    //   // winMsg.visible = false;
-    //
-    //   score = 0;
-    //   this.loadLevel();
-    //   this.loadActors();
-    // }
-
-
+    
     // // Toggle Music
     // muteKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
     // muteKey.onDown.add(this.toggleMute, this);
