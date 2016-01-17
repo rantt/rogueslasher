@@ -70,7 +70,7 @@ function moveActor(actor, dir) {
           if (enemy_count <= 15) {
             enemy_count++;
           }
-          winMsg = this.game.add.bitmapText(Game.w/2, Game.h/2, 'minecraftia', "Victory!\nClick to Continue.", 24); 
+          winMsg = this.game.add.bitmapText(Game.w/2, Game.h/2, 'minecraftia', "Victory!\nPress Space or Click to Continue.", 24); 
           winMsg.tint = 0x00ff00;
           winMsg.anchor.setTo(0.5);
         }
@@ -140,7 +140,7 @@ function aiAct(actor) {
     level = 0;
     enemy_count = 3;
     deadSnd.play();
-    loseMsg = this.game.add.bitmapText(Game.w/2, Game.h/2, 'minecraftia', "Game Over!\nClick to Play Again.", 24); 
+    loseMsg = this.game.add.bitmapText(Game.w/2, Game.h/2, 'minecraftia', "Game Over!\nPress Space or Click to Play Again.", 24); 
     loseMsg.tint = 0xff0000;
     loseMsg.anchor.setTo(0.5);
     twitterButton.visible = true;
