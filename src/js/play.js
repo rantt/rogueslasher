@@ -32,7 +32,6 @@ var map;
 var player,actorList,actorMap,livingEnemies,acted;
 
 function moveActor(actor, dir) {
-  // console.log(!canGo(actor, dir));
   if (!canGo(actor, dir))
     return false;
   
@@ -88,7 +87,6 @@ function moveActor(actor, dir) {
 
     actor.y = actor.ty*TILE_SIZE;
     actor.x = actor.tx*TILE_SIZE;
-    // console.log(actor);
 
     //Add reference to the actors new position
     actorMap[actor.ty+ '_'+ actor.tx]=actor; 
@@ -164,8 +162,6 @@ Game.Play.prototype = {
     // this.game.input.keyboard.addCallbacks(null, null, onKeyUp);
 
 
-    this.loadLevel();
-    this.loadActors();
 
     //SFX
     attackSnd = this.game.add.sound('attack');
@@ -226,6 +222,82 @@ Game.Play.prototype = {
     spaceKey.onUp.add(this.resetGame, this);
     this.game.input.onUp.add(this.resetGame, this);
 
+    this.loadLevel();
+    this.loadActors();
+
+  },
+  loadTouchControls: function() {
+
+    //Draw Arrow w/ Bitmap Data
+    var bmdsize = 80;
+    this.arrowbmd = this.game.add.bitmapData(bmdsize,bmdsize);
+    this.arrowbmd.ctx.clearRect(0,0,bmdsize,bmdsize);
+    // this.arrowbmd.ctx.fillStyle = '#dcdcdc';
+    this.arrowbmd.ctx.strokeStyle = 'white';
+    this.arrowbmd.ctx.lineWidth = 2;
+    this.arrowbmd.ctx.fill();
+    this.arrowbmd.ctx.beginPath();
+    this.arrowbmd.ctx.moveTo(bmdsize*1/2,0);
+    this.arrowbmd.ctx.lineTo(0,bmdsize*1/2);
+    this.arrowbmd.ctx.lineTo(bmdsize*1/4,bmdsize*1/2);
+    this.arrowbmd.ctx.lineTo(bmdsize*1/4,bmdsize);
+    this.arrowbmd.ctx.lineTo(bmdsize*3/4,bmdsize);
+    this.arrowbmd.ctx.lineTo(bmdsize*3/4,bmdsize*1/2);
+    this.arrowbmd.ctx.lineTo(bmdsize,bmdsize*1/2);
+    this.arrowbmd.ctx.fill();
+
+    //Add Touch Controls for mobile
+    //Up Arrow
+    this.upArrow = this.game.add.sprite(140, Game.h - 160, this.arrowbmd);
+    this.upArrow.tint = 0xdcdcdc;
+    this.upArrow.alpha = 0.5;
+    this.upArrow.anchor.setTo(0.5, 0.5);
+    this.upArrow.inputEnabled = true;
+    this.upArrow.events.onInputUp.add(this.onKeyUp, this);
+    this.upArrow.visible = false;
+
+    //Up Down
+    this.downArrow = this.game.add.sprite(140, Game.h - 40, this.arrowbmd);
+    this.downArrow.tint = 0xdcdcdc;
+    this.downArrow.alpha = 0.5;
+    this.downArrow.anchor.setTo(0.5, 0.5);
+    this.downArrow.inputEnabled = true;
+    this.downArrow.angle = 180;
+    this.downArrow.events.onInputUp.add(this.onKeyUp, this);
+    this.downArrow.visible = false;
+
+    //Up Left 
+    this.leftArrow = this.game.add.sprite(60, Game.h - 100, this.arrowbmd);
+    this.leftArrow.tint = 0xdcdcdc;
+    this.leftArrow.alpha = 0.5;
+    this.leftArrow.anchor.setTo(0.5, 0.5);
+    this.leftArrow.inputEnabled = true;
+    this.leftArrow.angle = -90;
+    this.leftArrow.events.onInputUp.add(this.onKeyUp, this);
+    this.leftArrow.visible = false;
+
+    //Up Right 
+    this.rightArrow = this.game.add.sprite(220, Game.h - 100, this.arrowbmd);
+    this.rightArrow.tint = 0xdcdcdc;
+    this.rightArrow.alpha = 0.5;
+    this.rightArrow.anchor.setTo(0.5, 0.5);
+    this.rightArrow.inputEnabled = true;
+    this.rightArrow.angle = 90;
+    this.rightArrow.events.onInputUp.add(this.onKeyUp, this);
+    this.rightArrow.visible = false;
+
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+      this.upArrow.visible = true;
+      this.downArrow.visible = true;
+      this.leftArrow.visible = true;
+      this.rightArrow.visible = true;
+    }else{
+      this.upArrow.visible = false;
+      this.downArrow.visible = false;
+      this.leftArrow.visible = false;
+      this.rightArrow.visible = false;
+    }
+
   },
   resetGame: function() {
     if (livingEnemies === 0) {
@@ -243,13 +315,13 @@ Game.Play.prototype = {
 
     acted = false;
 
-    if (key === this.cursors.up || key === wKey ) {
+    if (key === this.cursors.up || key === wKey || key === this.upArrow ) {
       this.movement.up();
-    }else if (key === this.cursors.down || key === sKey ) {
+    }else if (key === this.cursors.down || key === sKey || key === this.downArrow ) {
       this.movement.down();
-    }else if (key === this.cursors.left || key === aKey ) {
+    }else if (key === this.cursors.left || key === aKey || key === this.leftArrow ) {
       this.movement.left();
-    }else if (key === this.cursors.right || key === dKey ) {
+    }else if (key === this.cursors.right || key === dKey || key === this.rightArrow ) {
       this.movement.right();
     }
 
@@ -301,12 +373,6 @@ Game.Play.prototype = {
 
     player = actorList[0];
     this.game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER);
-
-    // player.direction = 'down';
-    // player.animations.add('down', [6, 7], 6, true);
-    // player.animations.add('up', [8, 9], 6, true);
-    // player.animations.add('right', [4, 11], 6, true);
-    // player.animations.add('left', [5, 10], 6, true);
   },
   loadLevel: function() {
 
@@ -358,6 +424,11 @@ Game.Play.prototype = {
 
     scoreText = this.game.add.bitmapText(Game.w - 120, 48,'minecraftia', 'Score: '+ score,32); 
     scoreText.anchor.setTo(0.5, 0.5);
+
+    this.loadTouchControls();
+
+
+
 
     twitterButton = this.game.add.button(this.game.world.centerX, this.game.world.centerY + 100,'twitter', this.twitter, this);
     twitterButton.anchor.set(0.5);
